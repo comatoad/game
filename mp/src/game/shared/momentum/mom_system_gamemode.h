@@ -215,6 +215,25 @@ public:
     float GetJumpFactor() override { return 300.0f; } // sqrt( 60 * 2 * 750 )
 };
 
+class CGameMode_Conc : public CGameModeBase
+{
+public:
+    GameMode_t GetType() override { return GAMEMODE_CONC; }
+    const char *GetStatusString() override { return "Concussion Grenade Jumping"; }
+    const char *GetDiscordIcon() override { return "mom_icon_conc"; }
+    const char *GetMapPrefix() override { return "conc_"; }
+    const char *GetGameModeCfg() override { return "conc.cfg"; }
+    float GetViewScale() override { return 1.0f; }
+    bool CanBhop() override { return false; }
+
+    float GetJumpFactor() override;
+
+    void SetGameModeVars() override;
+    bool PlayerHasAutoBhop() override { return false; }
+    void OnPlayerSpawn(CMomentumPlayer *pPlayer) override;
+    bool WeaponIsAllowed(WeaponID_t weapon) override;
+};
+
 class CGameModeSystem : public CAutoGameSystem
 {
 public:
