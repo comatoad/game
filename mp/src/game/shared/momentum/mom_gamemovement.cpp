@@ -946,6 +946,13 @@ void CMomentumGameMovement::DoUnduck(int iButtonsReleased)
 
         if (CanUnduck())
         {
+            // Unducking in FF is instant
+            if (g_pGameModeSystem->GameModeIs(GAMEMODE_CONC))
+            {
+                FinishUnDuck();
+                return;
+            }
+
             if (player->m_Local.m_bDucking || player->m_Local.m_bDucked) // or unducking
             {
                 float duckmilliseconds = max(0.0f, GAMEMOVEMENT_DUCK_TIME - player->m_Local.m_flDucktime);
@@ -1001,12 +1008,20 @@ void CMomentumGameMovement::FinishUnDuck()
     }
     else
     {
-        // If in air an letting go of crouch, make sure we can offset origin to make
-        //  up for uncrouching
+        // If in air and letting go of crouch, make sure we can offset origin to make
+        // up for uncrouching
         Vector hullSizeNormal = VEC_HULL_MAX - VEC_HULL_MIN;
         Vector hullSizeCrouch = VEC_DUCK_HULL_MAX - VEC_DUCK_HULL_MIN;
+        Vector viewDelta;
 
-        Vector viewDelta = -g_pGameModeSystem->GetGameMode()->GetViewScale() * (hullSizeNormal - hullSizeCrouch);
+        if (g_pGameModeSystem->GameModeIs(GAMEMODE_CONC))
+        {
+            viewDelta = (-g_pGameModeSystem->GetGameMode()->GetViewScale() * (hullSizeNormal - hullSizeCrouch)) / 2.0f;
+        }
+        else
+        {
+            viewDelta = -g_pGameModeSystem->GetGameMode()->GetViewScale() * (hullSizeNormal - hullSizeCrouch);
+        }
 
         VectorAdd(newOrigin, viewDelta, newOrigin);
     }
