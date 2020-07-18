@@ -393,6 +393,11 @@
     {
         "fieldName"		"HudStickyCharge"
     }
+	
+    HudConcTimer
+    {
+        "fieldName"		"HudConcTimer"
+    }
 
     CHudStickybombs
     {
