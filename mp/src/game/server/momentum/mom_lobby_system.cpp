@@ -13,6 +13,7 @@
 #include "mom_timer.h"
 #include "mom_system_steam_richpresence.h"
 #include <ctime>
+#include "steam/isteamnetworkingmessages.h"
 
 #include "tier0/memdbgon.h"
 
@@ -400,10 +401,10 @@ void CMomentumLobbySystem::ClearCurrentGhosts(bool bLeavingLobby)
 
 bool CMomentumLobbySystem::SendPacket(MomentumPacket *packet, const CSteamID &target, int sendType /*= k_nSteamNetworkingSend_Unreliable*/) const
 {
-    CHECK_STEAM_API_B(SteamNetworkingMessages());
-
     if (m_mapLobbyGhosts.Count() == 0)
         return false;
+
+    CHECK_STEAM_API_B(SteamNetworkingMessages());
 
     CUtlBuffer buf;
     packet->Write(buf);
