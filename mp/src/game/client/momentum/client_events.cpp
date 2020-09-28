@@ -21,6 +21,21 @@ inline void UnloadConVarOrCommand(const char *pName)
         g_pCVar->UnregisterConCommand(pCmd);
 }
 
+inline void OverrideConVarDefault(const char *pName, const char *pValue)
+{
+    const auto pVar = g_pCVar->FindVar(pName);
+
+    if (pVar)
+    {
+        if (FStrEq(pVar->GetDefault(), pVar->GetString()))
+        {
+            pVar->SetValue(pValue);
+        }
+
+        pVar->SetDefault(pValue);
+    }
+}
+
 bool CMOMClientEvents::Init()
 {
     // Mount CSS content even if it's on a different drive than this game
@@ -47,6 +62,11 @@ bool CMOMClientEvents::Init()
     {
         engine->ExecuteClientCmd("reload");
     });
+
+    // Override the default values with those of Portal 2/CS:GO to fix projected shadow clipping
+    // Done this way because the vars are originally defined in shaderapidx9
+    OverrideConVarDefault("mat_slopescaledepthbias_shadowmap", "3");
+    OverrideConVarDefault("mat_depthbias_shadowmap", "0.000025");
 
     return true;
 }
