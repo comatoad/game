@@ -278,7 +278,7 @@ public:
     // True if the entity was teleported, else false
     virtual bool DoTeleport(CBaseEntity *pTeleportTo, CBaseEntity *pEntToTeleport);
     // After teleporting, do this code. Base class does nothing.
-    virtual void AfterTeleport(CBaseEntity *pEntTeleported) {};
+    virtual void AfterTeleport(CBaseEntity *pEntTeleported);
 
 private:
     bool m_bResetVelocity;

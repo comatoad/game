@@ -23,6 +23,9 @@ static MAKE_TOGGLE_CONVAR(mom_triggers_overlay_bbox_enable, "0", FCVAR_DEVELOPME
 static MAKE_TOGGLE_CONVAR(mom_triggers_overlay_text_enable, "0", FCVAR_DEVELOPMENTONLY,
                           "Toggles showing the entity text for momentum triggers, needs map restart if changed!\n");
 
+static MAKE_TOGGLE_CONVAR(mom_auto_untoggle_inputs, "0", FCVAR_ARCHIVE | FCVAR_REPLICATED,
+                          "Automatically untoggles toggled inputs when teleported by a Momentum teleport. 0 = OFF, 1 = ON.\n");
+
 // ------------- Base Trigger ------------------------------------
 BEGIN_DATADESC(CBaseMomentumTrigger)
     DEFINE_KEYFIELD(m_iTrackNumber, FIELD_INTEGER, "track_number")
@@ -494,6 +497,15 @@ bool CTriggerMomentumTeleport::DoTeleport(CBaseEntity *pTeleportTo, CBaseEntity 
                      m_bResetVelocity ? &vec3_origin : nullptr);
     AfterTeleport(pEntToTeleport);
     return true;
+}
+
+void CTriggerMomentumTeleport::AfterTeleport(CBaseEntity *pEntTeleported)
+{
+    CMomentumPlayer *pPlayer = ToCMOMPlayer(pEntTeleported);
+    if (!pPlayer || !mom_auto_untoggle_inputs.GetBool())
+        return;
+
+    pPlayer->m_nButtonsToggled = 0;
 }
 
 //---------- CTriggerProgress ----------------------------------------------------------------
